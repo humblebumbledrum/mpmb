@@ -1,0 +1,242 @@
+/*	-WHAT IS THIS?-
+	This file adds optional material to "MPMB's Character Record Sheet" found at https://flapkan.com/mpmb/charsheets
+	Import this file using the "Add Extra Materials" bookmark.
+	-KEEP IN MIND-
+	It is recommended to enter the code in a fresh sheet before adding any other information (i.e. before making your character with it).
+*/
+
+/*	-INFORMATION-
+	Subject:	Subclass and Magic Items
+	Effect:		This script adds a subclass for the Monk, called "Way of the Psionic Embrace"
+			This is taken from the DMs Guild website (https://www.dmsguild.com/product/275382/)
+			This subclass is made by M.T. Black
+	Code by:	NodHero
+	Date:		2019-05-11 (sheet v13.0.8)
+			Please support the creator of this content (M.T. Black) and download their materials 
+			from the DMs Guild website: https://www.dmsguild.com/browse.php?author=M.T.%20Black
+*/
+
+var iFileName = "Monk - Way of the Psionic Embrace [MT Black].js";
+RequiredSheetVersion("13.0.8");
+
+// Define the source
+SourceList["MTB:WotIE"]={
+	name : "MT Black: Way of the Psionic Embrace",
+	abbreviation : "MTB:WotIE",
+	group : "Dungeon Masters Guild",
+	url : "https://www.dmsguild.com/product/275382/",
+	date : "2019/05/11"
+};
+
+// Add subclass
+AddSubClass("monk", "way of the Psionic Embrace", {
+	regExpSearch : /^(?=.*Psionic)(?=.*(embrace))((?=.*(monk|monastic))|((?=.*martial)(?=.*(artist|arts)))|((?=.*spiritual)(?=.*warrior))).*$/i,
+	subname : "Way of the Psionic Embrace",
+	source : ["MTB:WotIE", 3],
+	features : {
+	"subclassfeature3" : {
+		name : "Psychic Bolt",
+		source : ["MTB:WotIE", 3],
+		minlevel : 3,
+		additional : "1 ki point for 2 extra attacks",
+		description : desc([
+				"I gain a ranged spell attack that I can use as an attack in the Attack action",
+				"If I do this and spend 1 ki point, I can make 2 of these attacks as a bonus action"
+		]),
+		action : ["bonus action", " (2\xD7 with Attack action)"],
+		weaponOptions : {
+			regExpSearch : /^(?=.*psychic)(?=.*bolt).*$/i,
+			name : "Psychic Bolt",
+			source : ["MTB:WotIE", 3],
+			ability : 2,
+			type : "Spell",
+			damage : [1, 4, "psychic"],
+			range : "30 ft",
+			description : "If used in an Attack action, spend 1 ki point to use it twice as a bonus action",
+			monkweapon : true,
+			abilitytodamage : true
+			},
+			weaponsAdd : ['Psychic Bolt'],
+			"Psychic strike" : {
+				name : "Psychic Strike",
+				extraname : "Way of the Psionic Embrace 6",
+				source : ["MTB:WotIE", 3],
+				description : desc([
+					"After taking the Attack action, I can cast Dissonant Whispers as a bonus action [PHB 234]",
+					"For every additional ki point I spend, Dissonant Whispers is cast at 1 higher spell level",
+					"The maximum total ki points I can spend for this (including the 2) is half my Monk level"
+				]),
+				additional : levels.map(function (n) {
+					if (n < 3) return "";
+					var xtrKi = Math.max(0,Math.floor(n/2) - 2);
+					return "2 ki points + max " + xtrKi + " ki point" + (xtrKi == 1 ? "" : "s");
+				}),
+				action : ["bonus action", " (after Attack action)"],
+				spellcastingBonus : {
+					name : "Psychic Strike",
+					spells : ["dissonant whispers"],
+					selection : ["dissonant whispers"],
+					firstCol : 2
+				},
+				spellFirstColTitle : "Ki",
+				spellChanges : {
+					"dissonant whispers" : {
+						time : "1 bns",
+						description : "3d6+1d6/extra Ki Psychic dmg; save halves; (ki max 1/2 monk lvl)",
+						changes : "After I use the Attack action, I can cast Dissonant Whispers as a bonus action by spending 2 ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level."
+					}
+				}
+			},
+			autoSelectExtrachoices : [{
+				extrachoice : "Psychic strike",
+				minlevel : 6
+			}]
+		},
+		spellFirstColTitle : "Ki",
+			"Psionic spells" : {
+				name : "Psionic Spells",
+				extraname : "Psionic Arts",
+				source : [["P", 80]],
+				minlevel : 6,
+				description : " [3 ki points]" + "\n   " + "As an action, I can cast Mind Spike, Phantasmal Force, Shadow Blade, or Tasha's Mind Whip" + "\n   " + "I don't require spell slots or material components to cast these spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
+				action : ["action", ""],
+				spellcastingBonus : {
+					name : "Psionic Arts",
+					spells : ["mind spike", "phantasmal force", "shadow blade", "tasha's mind whip"],
+					selection : ["mind spike", "phantasmal force", "shadow blade", "tasha's mind whip"],
+					firstCol : 3,
+					times : 4
+				}
+			},
+			autoSelectExtrachoices : [{ extrachoice : "Psionic spells", minlevel : 6 }],
+			spellChanges : {
+				"mind spike" : {
+					description : "1 crea 3d8+1d8/extra Ki Psychic dmg, know its location, can't be invis for me; save half, no other benefits; (ki max 1/2 monk lvl) ",
+					components : "V",
+					compMaterial : "",
+					changes : "Spell cast with my Psionic Arts don't require material components."
+				},
+				"phantasmal force" : {
+					components : "V,S",
+					compMaterial : "",
+					description : "1 crea save or sees 10 ft cube illusion that does 1d6 Psychic dmg/rnd; Int(Investigation) vs. spell DC",
+					changes : "Spell cast with my Psionic Arts don't require material components."
+				},
+				"shadow blade" : {
+					components : "V,S",
+					compMaterial : "",
+					description : "Sword 2d8 Psychic dmg, finesse, light, thrown (20/60 ft), adv. if target in dim/dark; +1d8 per extra 2/4/6 Ki ; (ki max 1/2 monk lvl) ",
+					changes : "Spell cast with my Psionic Arts don't require material components."
+				},
+				"tasha's mind whip" : {
+					components : "V,S",
+					compMaterial : "",
+					description : "1+1/extra Ki crea, max 30 ft apart; 3d6 Psychic dmg; no rea; only move, act, or bns; save half, no act limit; (ki max 1/2 monk lvl) ",
+					changes : "Spell cast with my Psionic Arts don't require material components."
+				}
+			},
+			spellFirstColTitle : "Ki",
+			"Psionic smite" : {
+				name : "Psionic smite",
+				extraname : "Psionic smite",
+				source : [["P", 80]],
+				minlevel : 3,
+				description : " [2 ki points]" + "\n   " + "As an action, I can cast Wrathful Smite" + "\n   " + "I don't require spell slots or material components to cast this spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
+				action : ["action", ""],
+				spellcastingBonus : {
+					name : "Psionic smite",
+					spells : ["wrathful smite"],
+					selection : ["wrathful smite"],
+					firstCol : 2,
+					times : 1
+				}
+			},
+			autoSelectExtrachoices : [{ extrachoice : "Psionic smite", minlevel : 3 }],
+			spellChanges : {
+				"wrathful smite" : {
+					components : "V",
+					compMaterial : "",
+					description : "Next melee weapon hit +1d6 Psychic dmg and save or frightened; it can take 1 a for extra save; (ki max 1/2 monk lvl)",
+					changes : "Spell cast with my Psionic Arts don't require material components."
+			},
+		name : "Psychic Shield",
+			name : "Psychic Shield",
+			source : [["S", 131], ["X", 35]],
+			minlevel : 3,
+			description : desc([
+				"At 3rd level, you become wreathed in a semi-luminous, magical aura. You shed a psychic aura in a 10-foot radius, that makes everyone uncomfortable.",
+				" Animals act erratically. Everyone in the aura has disadvantage on Int/Wis/Cha ability checks, including you. You can extinguish or restore the aura as a bonus action.",
+"I have resistance to psychic damage.",
+				"I can only do this while my psychic aura is on; I can turn it on/off as a bonus action"
+			]),
+			action : [["bonus action", " (start/stop)"]],
+			additional : levels.map(function (n) { return n < 6 ? "" : Math.floor(n/2) + " damage"; }),
+			dmgres : ["Psychic"]
+		},
+	"subclassfeature11" : {
+	    name : "Psychic burst",
+			source : [["S", 131], ["X", 35]],
+			minlevel : 11,
+			description : desc([
+				"As an action, anyone in a 20-ft radius point within 150 ft makes a Wis save",
+				"If failed and not behind opaque total cover, take 2d6 (+ 2d6/ki point) psychic damage."
+			]),
+			action : ["action", ""],
+			additional : "0 ki points + max 3 ki points",
+			weaponsAdd : ['Psychic burst'],
+			weaponOptions : {
+				regExpSearch : /^(?=.*psychic)(?=.*burst).*$/i,
+				name : "Psychic burst",
+				source : [["S", 131], ["X", 35]],
+				ability : 5,
+				type : "Spell",
+				damage : [2, 6, "psychic"],
+				range : "150 ft",
+				description : "All in 20-ft radius; Wis save - success no damage; +2d6 damage per ki point (max 3 ki)",
+				abilitytodamage : false,
+				dc : true,
+				useSpellMod : "monk"
+				},
+			spellFirstColTitle : "Ki",
+			"Psionic burst" : {
+				name : "Psionic burst",
+				extraname : "Psionic burst",
+				source : [["P", 80]],
+				minlevel : 11,
+				description : " [6 ki points]" + "\n   " + "As an action, I can cast synaptic static" + "\n   " + "I don't require spell slots or material components to cast this spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
+				action : ["action", ""],
+				spellcastingBonus : {
+					name : "Psionic burst",
+					spells : ["synaptic static"],
+					selection : ["synaptic static"],
+					firstCol : 2,
+					times : 1
+				}
+			},
+autoSelectExtrachoices : [{ extrachoice : "Psionic burst", minlevel : 11 }],
+			spellChanges : {
+				"synaptic static" : {
+					components : "V",
+					compMaterial : "",
+					description : "20-ft rad all crea Int>2 save or 8d6 Psychic dmg, -1d6 on atks/check/conc. save; save half, no -1d6; (ki max 1/2 monk lvl)",
+					changes : "Spell cast with my Psionic Arts don't require material components."
+				}
+			}
+			},
+
+	"subclassfeature17" : {
+		name : "Improved Psychic Shield",
+			name : "Improved Psychic Shield",
+			source : [["S", 131], ["X", 35]],
+			minlevel : 17,
+			description : desc([
+				"At 17th level, you become wreathed in a semi-luminous, magical aura. You shed a psychic aura in a 30-foot radius, that makes everyone uncomfortable.",
+				" Animals act erratically. Everyone in the aura has disadvantage on Int/Wis/Cha ability checks, including you. You can extinguish or restore the aura as a bonus action.",
+				"As a reaction, when I'm hit by a melee attack, I can deal 5 + Wis mod Psychic damage",
+				"I can only do this while my psychic aura is on; I can turn it on/off as a bonus action"
+			]),
+			action : [["bonus action", " (start/stop)"], ["reaction", " (hit in melee)"]],
+			savetxt : { immune : ["psychic"] },
+		}
+	}
+});

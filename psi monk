@@ -102,7 +102,7 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 					selection : ["mind spike", "phantasmal force", "shadow blade", "tasha's mind whip"],
 					firstCol : 3,
 					times : 3
-				}
+				} 
 			},
 			autoSelectExtrachoices : [{ extrachoice : "Psionic spells", minlevel : 6 }],
 			spellChanges : {

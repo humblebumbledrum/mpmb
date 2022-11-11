@@ -205,7 +205,7 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 					name : "Psionic burst",
 					spells : ["synaptic static"],
 					selection : ["synaptic static"],
-					firstCol : 2,
+					firstCol : 6,
 					times : 1
 				}
 			},

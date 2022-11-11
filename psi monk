@@ -175,7 +175,8 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 			minlevel : 11,
 			description : desc([
 				"As an action, anyone in a 20-ft radius point within 150 ft makes a Wis save",
-				"If failed and not behind opaque total cover, take 2d6 (+ 2d6/ki point) psychic damage."
+				"If failed and not behind opaque total cover, take 2d6 (+ 2d6/ki point) psychic damage.",
+				As an action, I can cast synaptic static" + "\n   " + "I don't require spell slots or material components to cast this spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level."
 			]),
 			action : ["action", ""],
 			additional : "0 ki points + max 3 ki points",

@@ -8,12 +8,9 @@
 /*	-INFORMATION-
 	Subject:	Subclass and Magic Items
 	Effect:		This script adds a subclass for the Monk, called "Way of the Psionic Embrace"
-			This is taken from the DMs Guild website (https://www.dmsguild.com/product/275382/)
-			This subclass is made by M.T. Black
-	Code by:	NodHero
+			This subclass is made by HBD
+	Code by:	homebrew draft
 	Date:		2019-05-11 (sheet v13.0.8)
-			Please support the creator of this content (M.T. Black) and download their materials 
-			from the DMs Guild website: https://www.dmsguild.com/browse.php?author=M.T.%20Black
 */
 
 var iFileName = "Monk - Way of the Psionic Embrace [MT Black].js";
@@ -83,7 +80,7 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 						time : "1 bns",
 						description : "3d6+1d6/extra Ki Psychic dmg; save halves; (ki max 1/2 monk lvl)",
 						changes : "After I use the Attack action, I can cast Dissonant Whispers as a bonus action by spending 2 ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level."
-					}
+					},
 				}
 			},
 			autoSelectExtrachoices : [{
@@ -97,14 +94,14 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 				extraname : "Psionic Arts",
 				source : [["wotPE", 3]],
 				minlevel : 6,
-				description : " [3 ki points]" + "\n   " + "As an action, I can cast Mind Spike, Phantasmal Force, Shadow Blade, or Tasha's Mind Whip" + "\n   " + "I don't require spell slots or material components to cast these spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
+				description : " [3 ki points]" + "\n   " + "As an action, I can cast Mind Spike, Phantasmal Force, or Tasha's Mind Whip. As a bonus action I can cast Shaodw Blade." + "\n   " + "I don't require spell slots or material components to cast these spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
 				action : ["action", ""],
 				spellcastingBonus : {
 					name : "Psionic Arts",
 					spells : ["mind spike", "phantasmal force", "shadow blade", "tasha's mind whip"],
 					selection : ["mind spike", "phantasmal force", "shadow blade", "tasha's mind whip"],
 					firstCol : 3,
-					times : 4
+					times : 3
 				}
 			},
 			autoSelectExtrachoices : [{ extrachoice : "Psionic spells", minlevel : 6 }],
@@ -124,7 +121,7 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 				"shadow blade" : {
 					components : "V,S",
 					compMaterial : "",
-					description : "Sword 2d8 Psychic dmg, finesse, light, thrown (20/60 ft), adv. if target in dim/dark; +1d8 per extra 2/4/6 Ki ; (ki max 1/2 monk lvl) ",
+					description : "Sword 2d8 Psychic dmg, finesse, light, thrown (20/60 ft), adv. if target in dim/dark; +1d8 per extra 2/4/6 Ki ; (ki max 1/2 monk lvl)",
 					changes : "Spell cast with my Psionic Arts don't require material components."
 				},
 				"tasha's mind whip" : {
@@ -134,13 +131,13 @@ AddSubClass("monk", "way of the Psionic Embrace", {
 					changes : "Spell cast with my Psionic Arts don't require material components."
 				}
 			},
-			spellFirstColTitle : "Ki",
+						spellFirstColTitle : "Ki",
 			"Psionic smite" : {
 				name : "Psionic smite",
 				extraname : "Psionic smite",
 				source : [["wotPE", 80]],
 				minlevel : 3,
-				description : " [2 ki points]" + "\n   " + "As an action, I can cast Wrathful Smite" + "\n   " + "I don't require spell slots or material components to cast this spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
+				description : " [2 ki points]" + "\n   " + "As a bonus action, I can cast Wrathful Smite" + "\n   " + "I don't require spell slots or material components to cast this spells like this, just ki points. I can even spend additional ki points to increase its spell level. The total amount of ki points I can spend on it is half my monk level.",
 				action : ["action", ""],
 				spellcastingBonus : {
 					name : "Psionic smite",

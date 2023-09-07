@@ -1,0 +1,117 @@
+/*	-WHAT IS THIS?-
+	This file adds optional material to "MPMB's Character Record Sheet" found at https://flapkan.com/mpmb/charsheets
+	Import this file using the "Add Extra Materials" bookmark.
+
+	-KEEP IN MIND-
+	It is recommended to enter the code in a fresh sheet before adding any other information (i.e. before making your character with it).
+*/
+
+/*	-INFORMATION-
+	Subject:	Subclass & Feat
+	Effect:		This script adds a subclass for the Bard, called "College of Dancers"
+	Code by:	MorePurpleMoreBetter
+	Date:		2017-11-29 (sheet v12.999)
+
+*/
+
+var iFileName = "Bard - College of Dancers [UA].js";
+RequiredSheetVersion(12.999);
+
+SourceList["UA"] = {
+	name : "College of Dancers",
+	abbreviation : "UA",
+};
+
+AddSubClass("bard", "college of dancers", {
+	regExpSearch : /^(?=.*(college|bard|minstrel|troubadour|jongleur))(?=.*danc(ing|ers?)).*$/i,
+	subname : "College of Dancers",
+	source : ["MTC:CB", 0],
+	features : {
+		"subclassfeature3" : {
+			name : "Agile Strikes",
+			source : [["T", 64]],
+			minlevel : 3,
+			description : desc([
+				"When you expend a use of your Bardic Inspiration as part of an action, a Bonus Action, ",
+				"or a Reaction, you can make one Unarmed Strike as part of that action, Bonus Action, or Reaction."
+			]),
+				additional : levels.map(function (n) {
+				return "1d" + (n < 5 ? 6 : n < 10 ? 8 : n < 15 ? 10 : 12);
+			}),
+
+			weaponsAdd : ["Agile Strikes"],
+			weaponOptions : [{
+				regExpSearch : /^(?=.*agile)(?=.*strikes).*$/i,
+				name : "Agile Strikes",
+				source : [["T", 64]],
+				ability : 2,
+				type : "Simple",
+				damage : [1, 6, "Bludg"],
+				range : "Melee",
+				description : "When you expend a use of your Bardic Inspiration, you can make one Unarmed Strike as part of that action/bns/reaction.",
+				abilitytodamage : true
+			}],
+		calcChanges : {
+					atkAdd : [
+						function (fields, v) {
+							if (classes.known.bard && classes.known.bard.level && (v.theWea.bardweapon || v.baseWeaponName == "Agile Strikes")) {
+								v.theWea.bardweapon = true;
+								var aBardDie = function (n) { return n < 5 ? 6 : n < 10 ? 8 : n < 15 ? 10 : 12; }(classes.known.bard.level);
+								try {
+									var curDie = eval_ish(fields.Damage_Die.replace('d', '*'));
+								} catch (e) {
+									var curDie = 'x';
+								};
+								if (isNaN(curDie) || curDie < aBardDie) {
+									fields.Damage_Die = '1d' + aBardDie;
+								};
+								if (fields.Mod == 1 || fields.Mod == 2 || What(AbilityScores.abbreviations[fields.Mod - 1] + " Mod") < What(AbilityScores.abbreviations[v.StrDex - 1] + " Mod")) {
+									fields.Mod = v.StrDex;
+								}
+							};
+						},
+						"I can use either Strength or Dexterity and my Bardic Inspiration as damage die in place of the normal damage die for my Agile Strikes.",
+						5
+					]
+				}	
+		},
+		"subclassfeature3.1" : {
+			name : "Unarmored Defense",
+				source : [["SRD", 26], ["P", 78]],
+				minlevel : 1,
+				description : desc("Without armor and no shield, my AC is 10 + Dexterity modifier + Charisma modifier"),
+				armorOptions : [{
+					regExpSearch : /justToAddToDropDown/,
+					name : "Unarmored Defense (Cha)",
+					source : [["SRD", 26], ["P", 78]],
+					ac : "10+Cha",
+					affectsWildShape : true
+				}],
+				armorAdd : "Unarmored Defense (Cha)"
+		},
+		"subclassfeature6" : {
+			name : "Leading Evasion",
+			source : ["MTC:CB", 0],
+			minlevel : 6,
+			description : "\n   " + "When you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw, and you take only half damage if you fail. If any creatures within 5 feet of you are making the same Dexterity saving throw, you can share this benefit with them for that save. You can’t use this feature if you have the Incapacitated condition.",
+		},
+		"subclassfeature6.1" : {
+			name : "Tandem Footwork",
+			source : ["MTC:CB", 0],
+			minlevel : 6,
+			description : "\n   " + "When you roll Initiative, you can spend one use of your Bardic Inspiration if you don’t have the Incapacitated condition. When you do so, roll your Bardic Inspiration die, and choose a number of creatures within 60 feet of yourself (you can choose yourself), up to a number equal to your Charisma modifier (minimum of one creature). Each of them gains a bonus to their Initiative equal to the number rolled."
+		},
+		"subclassfeature14" : {
+			name : "Irresistible Dance",
+			source : ["MTC:CB", 0],
+			minlevel : 14,
+			description : desc([
+				"\n   " + "When you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw, and you take only half damage if you fail. If any creatures within 5 feet of you are making the same Dexterity saving throw, you can share this benefit with them for that save. You can’t use this feature if you have the Incapacitated condition."
+			]),
+			spellcastingExtra : ["otto's irresistible dance"],
+			action : ["Action", ""],
+			recovery : "long rest",
+			usages : 1
+		}
+	}
+});
